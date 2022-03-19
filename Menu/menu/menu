@@ -1,0 +1,130 @@
+import enquiries
+import ipdb
+import sqlite3
+from rich import print as rprint
+from rich.console import Console
+console = Console()
+from rich.progress import track
+from rich.progress import track
+from time import sleep
+
+
+
+banco= sqlite3.connect('database.db')
+cursor = banco.cursor()
+
+
+def menu():
+    global choice
+    global options
+    options = ['Cadastrar', 'Buscar', 'Listar', 'Sair']
+    choice = enquiries.choose('Por favor escolha uma opção: \n', options)
+print()  
+menu()
+
+
+while choice != 'Sair':
+    
+    if choice == 'Cadastrar':  
+        
+        endereco = console.input("[cyan]Endereço:[/]")
+        estado = console.input("[cyan]Estado:[/]")
+        valor = float(console.input("[cyan]Preço:[/]"))
+
+        valor_formatado = '{:.3f}'.format(valor)
+
+        sql = """INSERT INTO imoveis(Endereco,Estado,Valor) VALUES ('{}', '{}', '{}');""".format(endereco, estado, valor_formatado)
+        cursor.execute(sql)
+        banco.commit()
+        print()
+
+        
+        sleep(0.5)
+            
+        rprint('[green]Endereço adicionado com sucesso[/]')
+        print('--------------------------------------')
+        menu()
+        
+        
+         
+    elif choice == 'Buscar':   
+        
+        def buscar():
+            
+            print('--------------------------------------')
+            busca = console.input("[cyan]Digite sua busca:[/]")
+            print()
+            
+            
+            sql = ("SELECT * FROM imoveis WHERE endereco LIKE '%{b}%' OR estado LIKE '%{b}' OR valor LIKE '%{b}%'".format( b= busca))
+
+
+
+            
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+            print("Imóveis encontrados:", len(rows))
+            print()
+            for x in rows:
+                rprint("[cyan]Endereço:[cyan]", x[1])
+                rprint("[cyan]Estado:[cyan]", x[2])
+                rprint("[cyan]Preço:[cyan] R$", x[3])
+                rprint()
+
+            voltar = console.input("[green]Gostaria de procurar novamente?[green] [red]s/n?[red]")
+            if voltar == 'n':
+                print('--------------------------------------')
+                menu()
+            if voltar == 's' :
+                print()
+                buscar()
+
+        buscar()
+
+    
+    
+    elif choice == 'Listar':  
+
+
+        console = Console()
+        tasks = [f"task{n}" for n in range(1,3)]
+
+        with console.status("[bold green] Listando endereços...") as status:
+            while tasks:    
+                task = tasks.pop(0)
+                sleep(1)
+        
+
+        sql = "SELECT endereco, estado, valor FROM imoveis ;"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        print("Imóveis cadastrados:", len(rows))
+        print()
+        for x in rows:
+            rprint("[cyan]Endereço:[cyan]", x[0] )
+            rprint("[cyan]Estado:[cyan]", x[1])
+            rprint("[cyan]Preço: R$[cyan]", x[2])
+            print('--------------------------------------')
+            
+        
+        cursor.close
+        
+        menu()
+        
+        
+    elif options == 'Sair':   
+        print('Sair')
+        
+
+    else:
+        print()
+        
+        
+
+    print()
+
+        
+
+    
+        
+    
