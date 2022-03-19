@@ -3,7 +3,7 @@
 
 <h1 align='center'> Terminal Menu de cadastro, busca e listagem de imóveis </h1>
 
-<p> <b>Projeto de estudo executado com Python e SQLite3 </b></p>
+<p> <b>Projeto de estudo executado com Python e SQLite </b></p>
 
 ### Funcionalidades
 
